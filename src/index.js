@@ -3,8 +3,6 @@ import Notiflix from 'notiflix';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-console.log(simpleLightbox);
-
 const refs = {
   form: document.querySelector('#search-form'),
   gallery: document.querySelector('.js-gallery'),
@@ -28,9 +26,9 @@ const PER_PAGE = 40;
 let currentPage = 1;
 let searchRequest = null;
 let btnVisible = 0;
-const TOTAL_HITS = 500;
-let totalHits = 500;
-var lightbox = null;
+const TOTAL_HITS = 1;
+let totalHits = 1;
+let lightbox = null;
 
 function getData(searchRequest, currentPage) {
   const params = new URLSearchParams({
@@ -80,32 +78,10 @@ function onSearch(event) {
 }
 
 function createMarkup(arrData, currentPage, totalHits) {
-  if (currentPage > Math.ceil(totalHits / PER_PAGE)) {
-    btnVisible = 0;
-    Notiflix.Notify.warning(
-      `We're sorry, but you've reached the end of search results.`
-    );
-    message.innerHTML = '';
-    message.insertAdjacentHTML(
-      'beforeend',
-      `<p class="js-message">We're sorry, but you've reached the end of search results.</p>`
-    );
-    return ``;
-  } else {
-    if (!arrData.length) {
-      btnVisible = 0;
-      Notiflix.Notify.failure(
-        `Sorry, there are no images matching your search query. Please try again.`
-      );
-      gallery.innerHTML = '';
-      message.innerHTML = '';
-      message.insertAdjacentHTML(
-        'beforeend',
-        `
-        <p class="js-message js-warning">Sorry, there are no images matching your search query. Please try again.</p>`
-      );
-      return ``;
-    }
+  if (currentPage > Math.ceil(totalHits / PER_PAGE))
+    return messageEndCollection();
+  else {
+    if (!arrData.length) return messageErrorSearch();
   }
 
   btnVisible = 1;
@@ -145,26 +121,57 @@ function createMarkup(arrData, currentPage, totalHits) {
 
 function onLoadMore() {
   currentPage += 1;
-
-  getData(searchRequest, currentPage)
-    .then(data => {
-      gallery.insertAdjacentHTML(
-        'beforeend',
-        createMarkup(data.hits, currentPage, totalHits)
-      );
-      console.log(data.hits);
-      lightbox.refresh();
-      const { height: cardHeight } = document
-        .querySelector('.js-gallery')
-        .firstElementChild.getBoundingClientRect();
-      console.log(cardHeight);
-      window.scrollBy({
-        top: cardHeight * 1.8,
-        behavior: 'smooth',
+  let photo = currentPage * PER_PAGE;
+  if (photo <= totalHits + 20) {
+    getData(searchRequest, currentPage)
+      .then(data => {
+        gallery.insertAdjacentHTML(
+          'beforeend',
+          createMarkup(data.hits, currentPage, totalHits)
+        );
+        lightbox.refresh();
+        const { height: cardHeight } = document
+          .querySelector('.js-gallery')
+          .firstElementChild.getBoundingClientRect();
+        window.scrollBy({
+          top: cardHeight * 1.8,
+          behavior: 'smooth',
+        });
+        btnVisible ? (btnLoadMore.hidden = false) : (btnLoadMore.hidden = true);
+      })
+      .catch(err => {
+        console.log(err.message);
       });
-      btnVisible ? (btnLoadMore.hidden = false) : (btnLoadMore.hidden = true);
-    })
-    .catch(err => {
-      console.log(err.message);
-    });
+  } else {
+    messageEndCollection();
+    btnVisible ? (btnLoadMore.hidden = false) : (btnLoadMore.hidden = true);
+  }
+}
+
+function messageEndCollection() {
+  btnVisible = 0;
+  Notiflix.Notify.warning(
+    `We're sorry, but you've reached the end of search results.`
+  );
+  message.innerHTML = '';
+  message.insertAdjacentHTML(
+    'beforeend',
+    `<p class="js-message">We're sorry, but you've reached the end of search results.</p>`
+  );
+  return ``;
+}
+
+function messageErrorSearch() {
+  btnVisible = 0;
+  Notiflix.Notify.failure(
+    `Sorry, there are no images matching your search query. Please try again.`
+  );
+  gallery.innerHTML = '';
+  message.innerHTML = '';
+  message.insertAdjacentHTML(
+    'beforeend',
+    `
+        <p class="js-message js-warning">Sorry, there are no images matching your search query. Please try again.</p>`
+  );
+  return ``;
 }
