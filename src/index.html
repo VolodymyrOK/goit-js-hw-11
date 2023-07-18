@@ -9,6 +9,26 @@
   </head>
   <body>
     <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+    <!-- <include src="./partials/example.html"></include> -->
+    <form class="search-form" id="search-form">
+      <input
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Search images..."
+      />
+      <button type="submit">
+        Search
+        <!-- <svg class="search-svg" width="16" height="16">
+            <use href="/src/images/search.svg"></use>
+          </svg> -->
+      </button>
+    </form>
+    <svg class="search-svg" width="16" height="16">
+      <use href="/src/images/search.svg"></use>
+    </svg>
+    <div class="js-gallery"></div>
+    <div class="js-message"></div>
+    <button type="button" class="js-load-more" hidden>Load more</button>
   </body>
 </html>
