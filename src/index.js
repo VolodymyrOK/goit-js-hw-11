@@ -8,7 +8,7 @@ import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
-let { totalHits } = _var;
+let { currentPage, searchRequest, lightbox, arrSearchData, totalHits } = _var;
 
 const { form, gallery, message, guard } = refs;
 

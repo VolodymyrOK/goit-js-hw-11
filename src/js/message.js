@@ -4,8 +4,6 @@ import { observer } from '..';
 
 const { message, guard, gallery } = refs;
 
-const PER_PAGE = 40;
-
 function messageEndCollection(textWarning) {
   Notiflix.Notify.warning(`${textWarning}`);
   message.insertAdjacentHTML(
