@@ -8,13 +8,15 @@ import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
-let { currentPage, searchRequest, lightbox, arrSearchData, totalHits } = _var;
+let { currentPage, searchRequest, lightbox, arrSearchData, totalHits, remOf } =
+  _var;
 
 const { form, gallery, message, guard } = refs;
 
 form.addEventListener('submit', onSearch);
 
 function onSearch(event) {
+  remOf = 0;
   currentPage = 1;
   event.preventDefault();
   searchRequest = event.target.firstElementChild.value;
@@ -39,16 +41,20 @@ function onSearch(event) {
       if (!totalHits) totalHits = TOTAL_HITS;
     })
     .catch(err => {
-      console.log(err.message);
+      console.log(err);
     });
 }
 
 function onLoadMore() {
   currentPage += 1;
   let photo = currentPage * PER_PAGE;
-  if (photo <= totalHits + 20) {
+  const diff = totalHits - photo;
+  if (diff < PER_PAGE && diff >= 0) remOf = totalHits - photo;
+  console.log(remOf);
+  if (photo <= totalHits + remOf) {
     getData(searchRequest, currentPage)
       .then(data => {
+        console.log(data);
         gallery.insertAdjacentHTML(
           'beforeend',
           createMarkup(data.hits, currentPage, totalHits)
@@ -58,7 +64,7 @@ function onLoadMore() {
           .querySelector('.js-gallery')
           .firstElementChild.getBoundingClientRect();
         window.scrollBy({
-          top: cardHeight * 1.8,
+          top: cardHeight * 2.15,
           behavior: 'smooth',
         });
       })

@@ -6,6 +6,12 @@
   justify-content: center;
 }
 
+.photo-card {
+  box-shadow: 5px 5px 9px 0px rgba(2, 34, 56, 0.35);
+  -webkit-box-shadow: 5px 5px 9px 0px rgba(2, 34, 56, 0.35);
+  -moz-box-shadow: 5px 5px 9px 0px rgba(2, 34, 56, 0.35);
+}
+
 .info {
   display: flex;
   gap: 10px;
