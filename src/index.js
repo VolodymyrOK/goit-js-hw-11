@@ -7,6 +7,7 @@ import { messageEndCollection } from './js/message';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
+import { messageError } from './js/message';
 
 let { currentPage, searchRequest, lightbox, arrSearchData, totalHits, remOf } =
   _var;
