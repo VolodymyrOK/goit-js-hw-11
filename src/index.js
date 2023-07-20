@@ -51,7 +51,7 @@ function onLoadMore() {
   let photo = currentPage * PER_PAGE;
   const diff = totalHits - photo;
   if (diff < PER_PAGE && diff >= 0) remOf = totalHits - photo;
-  if (photo <= totalHits + remOf) {
+  if (photo - remOf <= totalHits + remOf) {
     getData(searchRequest, currentPage)
       .then(data => {
         gallery.insertAdjacentHTML(
