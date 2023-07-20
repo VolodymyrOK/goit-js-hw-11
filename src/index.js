@@ -39,7 +39,7 @@ function onSearch(event) {
       if (!totalHits) totalHits = TOTAL_HITS;
     })
     .catch(err => {
-      console.log(err);
+      console.log(err.message);
     });
 }
 
