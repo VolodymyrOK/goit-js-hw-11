@@ -37,18 +37,21 @@ const options = {
 
 const observer = new IntersectionObserver(handlerPaggination, options);
 
-function getData(searchRequest, currentPage) {
-  const params = new URLSearchParams({
-    key: KEY,
-    q: searchRequest,
-    image_type: IMAGE_TYPE,
-    orientation: ORIENTATION,
-    safesearch: SAFESEARCH,
-    per_page: PER_PAGE,
-    page: currentPage,
-  });
-  const request = `?${params}`;
-  return axios.get(request).then(response => response.data);
+async function getData(searchRequest, currentPage) {
+  try {
+    const params = new URLSearchParams({
+      key: KEY,
+      q: searchRequest,
+      image_type: IMAGE_TYPE,
+      orientation: ORIENTATION,
+      safesearch: SAFESEARCH,
+      per_page: PER_PAGE,
+      page: currentPage,
+    });
+    return (await axios.get(`?${params}`)).data;
+  } catch {
+    messageErrorSearch(`Error reading data. Network error.`);
+  }
 }
 
 function onSearch(event) {
