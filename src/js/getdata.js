@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { KEY, IMAGE_TYPE, ORIENTATION, SAFESEARCH, PER_PAGE } from './const';
-import { messageErrorSearch } from './message';
+import { messageError } from './message';
 
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
@@ -17,7 +17,7 @@ async function getData(searchRequest, currentPage) {
     });
     return (await axios.get(`?${params}`)).data;
   } catch {
-    messageErrorSearch(`Error reading data. Network error.`);
+    messageError(`Error reading data. Network error.`);
   }
 }
 

@@ -40,8 +40,9 @@ function onSearch(event) {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
       if (!totalHits) totalHits = TOTAL_HITS;
     })
-    .catch(err => {
-      console.log(err);
+    .catch(() => {
+      messageError(`Unknown error onSearch`);
+      // console.log(err.message);
     });
 }
 
@@ -50,7 +51,6 @@ function onLoadMore() {
   let photo = currentPage * PER_PAGE;
   const diff = totalHits - photo;
   if (diff < PER_PAGE && diff >= 0) remOf = totalHits - photo;
-  console.log(remOf);
   if (photo <= totalHits + remOf) {
     getData(searchRequest, currentPage)
       .then(data => {
@@ -68,8 +68,9 @@ function onLoadMore() {
           behavior: 'smooth',
         });
       })
-      .catch(err => {
-        console.log(err.message);
+      .catch(() => {
+        messageError(`Unknown error onLoadMore`);
+        // console.log(err.message);
       });
   } else {
     if (arrSearchData.length !== 0)

@@ -14,7 +14,7 @@ function messageEndCollection(textWarning) {
   return ``;
 }
 
-function messageErrorSearch(textError) {
+function messageError(textError) {
   errorMarker = true;
   Notiflix.Notify.failure(`${textError}`);
   gallery.innerHTML = '';
@@ -27,4 +27,4 @@ function messageErrorSearch(textError) {
   return ``;
 }
 
-export { messageEndCollection, messageErrorSearch };
+export { messageEndCollection, messageError };

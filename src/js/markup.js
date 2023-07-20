@@ -1,4 +1,4 @@
-import { messageEndCollection, messageErrorSearch } from './message';
+import { messageEndCollection, messageError } from './message';
 import { WIDTH, HEIGHT, PER_PAGE } from './const';
 
 function createMarkup(arrData, currentPage, totalHits) {
@@ -8,7 +8,7 @@ function createMarkup(arrData, currentPage, totalHits) {
     );
   else {
     if (!arrData.length)
-      messageErrorSearch(
+      messageError(
         'Sorry, there are no images matching your search query. Please try again.'
       );
   }
