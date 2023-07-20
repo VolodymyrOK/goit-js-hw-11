@@ -15,7 +15,6 @@ function messageEndCollection(textWarning) {
 }
 
 function messageError(textError) {
-  errorMarker = true;
   Notiflix.Notify.failure(`${textError}`);
   gallery.innerHTML = '';
   message.innerHTML = '';
