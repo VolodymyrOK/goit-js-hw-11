@@ -41,9 +41,8 @@ function onSearch(event) {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
       if (!totalHits) totalHits = TOTAL_HITS;
     })
-    .catch(() => {
-      messageError(`Unknown error onSearch`);
-      // console.log(err.message);
+    .catch(error => {
+      messageError(error.message);
     });
 }
 
@@ -55,7 +54,6 @@ function onLoadMore() {
   if (photo <= totalHits + remOf) {
     getData(searchRequest, currentPage)
       .then(data => {
-        console.log(data);
         gallery.insertAdjacentHTML(
           'beforeend',
           createMarkup(data.hits, currentPage, totalHits)
@@ -69,9 +67,8 @@ function onLoadMore() {
           behavior: 'smooth',
         });
       })
-      .catch(() => {
-        messageError(`Unknown error onLoadMore`);
-        // console.log(err.message);
+      .catch(error => {
+        messageError(error.message);
       });
   } else {
     if (arrSearchData.length !== 0)
