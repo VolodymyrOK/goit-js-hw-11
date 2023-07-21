@@ -21,6 +21,8 @@ function onSearch(event) {
   currentPage = 1;
   event.preventDefault();
   searchRequest = event.target.firstElementChild.value;
+  if (!searchRequest)
+    return messageError('No data to search. Enter data in the input field.');
 
   return getData(searchRequest, currentPage)
     .then(data => {
