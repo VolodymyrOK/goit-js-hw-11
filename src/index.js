@@ -1,6 +1,6 @@
 import refs from './js/refs';
 import _var from './js/var';
-import { TOTAL_HITS, PER_PAGE } from './js/const';
+import { PER_PAGE } from './js/const';
 import { createMarkup } from './js/markup';
 import { getData } from './js/getdata';
 import { messageEndCollection } from './js/message';
@@ -17,10 +17,10 @@ const { form, gallery, message, guard } = refs;
 form.addEventListener('submit', onSearch);
 
 function onSearch(event) {
+  event.preventDefault();
   remOf = 0;
   currentPage = 1;
-  event.preventDefault();
-  searchRequest = event.target.firstElementChild.value;
+  searchRequest = event.target.firstElementChild.value.trim();
   if (!searchRequest)
     return messageError('No data to search. Enter data in the input field.');
 
@@ -40,19 +40,24 @@ function onSearch(event) {
         captionDelay: 250,
       });
       totalHits = data.totalHits;
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-      if (!totalHits) totalHits = TOTAL_HITS;
     })
     .catch(error => {
+      // console.log(error);
       messageError(error.message);
+    })
+    .finally(() => {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      if (!totalHits) totalHits = 1;
     });
 }
 
-function onLoadMore() {
+function onLoadMoreInfinityScroll() {
   currentPage += 1;
   let photo = currentPage * PER_PAGE;
+
   const diff = totalHits - photo;
   if (diff < PER_PAGE && diff >= 0) remOf = totalHits - photo;
+
   if (photo - remOf <= totalHits + remOf) {
     getData(searchRequest, currentPage)
       .then(data => {
@@ -60,7 +65,9 @@ function onLoadMore() {
           'beforeend',
           createMarkup(data.hits, currentPage, totalHits)
         );
+
         lightbox.refresh();
+
         const { height: cardHeight } = document
           .querySelector('.js-gallery')
           .firstElementChild.getBoundingClientRect();
@@ -70,6 +77,7 @@ function onLoadMore() {
         });
       })
       .catch(error => {
+        // console.log(error);
         messageError(error.message);
       });
   } else {
@@ -91,7 +99,7 @@ const observer = new IntersectionObserver(handlerPaggination, options);
 function handlerPaggination(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      onLoadMore();
+      onLoadMoreInfinityScroll();
     }
   });
 }

@@ -5,15 +5,5 @@ const SAFESEARCH = 'true';
 const WIDTH = 300;
 const HEIGHT = 210;
 const PER_PAGE = 40;
-const TOTAL_HITS = 1;
 
-export {
-  KEY,
-  IMAGE_TYPE,
-  ORIENTATION,
-  SAFESEARCH,
-  WIDTH,
-  HEIGHT,
-  PER_PAGE,
-  TOTAL_HITS,
-};
+export { KEY, IMAGE_TYPE, ORIENTATION, SAFESEARCH, WIDTH, HEIGHT, PER_PAGE };
