@@ -2,7 +2,6 @@ import { messageEndCollection, messageError } from './message';
 import { WIDTH, HEIGHT, PER_PAGE } from './const';
 
 function createMarkup(arrData, currentPage, totalHits) {
-  console.log(totalHits);
   if (currentPage > Math.ceil(totalHits / PER_PAGE))
     messageEndCollection(
       "We're sorry, but you've reached the end of search results."
