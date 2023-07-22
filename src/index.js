@@ -9,8 +9,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 import { messageError } from './js/message';
 
-let { currentPage, searchRequest, lightbox, arrSearchData, totalHits, remOf } =
-  _var;
+let { currentPage, searchRequest, lightbox, arrSearchData, totalHits } = _var;
 
 const { form, gallery, message, guard } = refs;
 
@@ -18,7 +17,6 @@ form.addEventListener('submit', onSearch);
 
 function onSearch(event) {
   event.preventDefault();
-  remOf = 0;
   currentPage = 1;
   searchRequest = event.target.firstElementChild.value.trim();
   if (!searchRequest)
@@ -43,7 +41,7 @@ function onSearch(event) {
     })
     .catch(error => {
       // console.log(error);
-      messageError(error.message);
+      messageError(`${error.message}. Error reading data.`);
     })
     .finally(() => {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
@@ -54,11 +52,7 @@ function onSearch(event) {
 function onLoadMoreInfinityScroll() {
   currentPage += 1;
   let photo = currentPage * PER_PAGE;
-
-  const diff = totalHits - photo;
-  if (diff < PER_PAGE && diff >= 0) remOf = totalHits - photo;
-
-  if (photo - remOf <= totalHits + remOf) {
+  if (photo <= totalHits || photo - totalHits <= PER_PAGE) {
     getData(searchRequest, currentPage)
       .then(data => {
         gallery.insertAdjacentHTML(
@@ -83,7 +77,7 @@ function onLoadMoreInfinityScroll() {
   } else {
     if (arrSearchData.length !== 0)
       messageEndCollection(
-        "We're sorry, but you've reached the end of search results."
+        `We're sorry, but you've reached the end of search results. Found ${totalHits} images.`
       );
   }
 }

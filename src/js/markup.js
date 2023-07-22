@@ -4,7 +4,7 @@ import { WIDTH, HEIGHT, PER_PAGE } from './const';
 function createMarkup(arrData, currentPage, totalHits) {
   if (currentPage > Math.ceil(totalHits / PER_PAGE))
     messageEndCollection(
-      "We're sorry, but you've reached the end of search results."
+      `We're sorry, but you've reached the end of search results. Found ${totalHits} images.`
     );
   else {
     if (!arrData.length)
