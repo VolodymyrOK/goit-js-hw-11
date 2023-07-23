@@ -15,7 +15,8 @@ async function getData(searchRequest, currentPage) {
     per_page: PER_PAGE,
     page: currentPage,
   });
-  return (await axios.get(`?${params}`)).data;
+  const response = await axios.get(`?${params}`);
+  return response.data;
   // }
   // catch {
   //   messageError(`Error reading data. Network error.`);
