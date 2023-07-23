@@ -4,4 +4,5 @@ export default {
   lightbox: null,
   arrSearchData: [],
   totalHits: 1,
+  readingError: false,
 };

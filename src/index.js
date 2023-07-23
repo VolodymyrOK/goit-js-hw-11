@@ -9,21 +9,38 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 import { messageError } from './js/message';
 
-let { currentPage, searchRequest, lightbox, arrSearchData, totalHits } = _var;
+let {
+  currentPage,
+  searchRequest,
+  lightbox,
+  arrSearchData,
+  totalHits,
+  readingError,
+} = _var;
 
-const { form, gallery, message, guard } = refs;
+const { form, gallery, message, guard, buttonArrowUp } = refs;
 
 form.addEventListener('submit', onSearch);
+buttonArrowUp.addEventListener('click', () => {
+  window.scroll({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
+});
 
 function onSearch(event) {
   event.preventDefault();
   currentPage = 1;
   searchRequest = event.target.firstElementChild.value.trim();
-  if (!searchRequest)
+  if (!searchRequest) {
+    buttonArrowUp.hidden = true;
     return messageError('No data to search. Enter data in the input field.');
+  }
 
   return getData(searchRequest, currentPage)
     .then(data => {
+      readingError = false;
       message.innerHTML = '';
       gallery.innerHTML = '';
       gallery.insertAdjacentHTML(
@@ -41,11 +58,14 @@ function onSearch(event) {
     })
     .catch(error => {
       // console.log(error);
+      readingError = true;
+      buttonArrowUp.hidden = true;
       messageError(`${error.message}. Error reading data.`);
-      totalHits = 0;
     })
     .finally(() => {
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      if (totalHits && !readingError) {
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      }
       if (!totalHits) totalHits = 1;
     });
 }
@@ -73,6 +93,7 @@ function onLoadMoreInfinityScroll() {
       })
       .catch(error => {
         // console.log(error);
+        buttonArrowUp.hidden = true;
         messageError(`${error.message}. Error reading data.`);
       });
   } else {

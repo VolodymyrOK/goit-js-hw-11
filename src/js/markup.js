@@ -1,17 +1,24 @@
 import { messageEndCollection, messageError } from './message';
 import { WIDTH, HEIGHT, PER_PAGE } from './const';
+import refs from './refs';
+
+const { buttonArrowUp } = refs;
 
 function createMarkup(arrData, currentPage, totalHits) {
-  if (currentPage > Math.ceil(totalHits / PER_PAGE))
-    messageEndCollection(
+  if (currentPage > Math.ceil(totalHits / PER_PAGE)) {
+    buttonArrowUp.hidden = true;
+    return messageEndCollection(
       `We're sorry, but you've reached the end of search results. Found ${totalHits} images.`
     );
-  else {
-    if (!arrData.length)
-      messageError(
+  } else {
+    if (!arrData.length) {
+      buttonArrowUp.hidden = true;
+      return messageError(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+    }
   }
+  buttonArrowUp.hidden = false;
   return arrData
     .map(
       (
