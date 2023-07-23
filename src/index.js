@@ -42,6 +42,7 @@ function onSearch(event) {
     .catch(error => {
       // console.log(error);
       messageError(`${error.message}. Error reading data.`);
+      totalHits = 0;
     })
     .finally(() => {
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
@@ -72,7 +73,7 @@ function onLoadMoreInfinityScroll() {
       })
       .catch(error => {
         // console.log(error);
-        messageError(error.message);
+        messageError(`${error.message}. Error reading data.`);
       });
   } else {
     if (arrSearchData.length !== 0)
