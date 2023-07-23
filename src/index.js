@@ -9,6 +9,14 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 import { messageError } from './js/message';
 
+const scrollWinUp = () => {
+  window.scroll({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
+};
+
 let {
   currentPage,
   searchRequest,
@@ -22,11 +30,7 @@ const { form, gallery, message, guard, buttonArrowUp } = refs;
 
 form.addEventListener('submit', onSearch);
 buttonArrowUp.addEventListener('click', () => {
-  window.scroll({
-    top: 0,
-    left: 0,
-    behavior: 'smooth',
-  });
+  scrollWinUp();
 });
 
 function onSearch(event) {
@@ -37,7 +41,7 @@ function onSearch(event) {
     buttonArrowUp.hidden = true;
     return messageError('No data to search. Enter data in the input field.');
   }
-
+  scrollWinUp();
   return getData(searchRequest, currentPage)
     .then(data => {
       readingError = false;

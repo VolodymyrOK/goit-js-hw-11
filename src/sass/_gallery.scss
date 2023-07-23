@@ -40,20 +40,23 @@
 }
 
 .search-form {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
   text-align: center;
   margin-top: 10px;
   padding-top: 8px;
   padding-bottom: 8px;
   background-color: teal;
-}
-input,
-button {
-  outline: none;
-  padding: 4px;
-}
 
-button {
-  cursor: pointer;
+  & input,
+  button {
+    outline: none;
+    padding: 4px;
+  }
+  & button {
+    cursor: pointer;
+  }
 }
 
 .js-load-more {
