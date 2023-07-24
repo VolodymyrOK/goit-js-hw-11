@@ -1,11 +1,17 @@
 import axios from 'axios';
-import { KEY, IMAGE_TYPE, ORIENTATION, SAFESEARCH, PER_PAGE } from './const';
-// import { messageError } from './message';
+import {
+  KEY,
+  IMAGE_TYPE,
+  ORIENTATION,
+  SAFESEARCH,
+  PER_PAGE,
+  BASE_URL,
+} from './const';
 
-axios.defaults.baseURL = 'https://pixabay.com/api/';
+axios.defaults.baseURL = BASE_URL;
+// axios.defaults.headers.common['key'] = KEY;
 
 async function getData(searchRequest, currentPage) {
-  // try {
   const params = new URLSearchParams({
     key: KEY,
     q: searchRequest,
@@ -17,10 +23,6 @@ async function getData(searchRequest, currentPage) {
   });
   const response = await axios.get(`?${params}`);
   return response.data;
-  // }
-  // catch {
-  //   messageError(`Error reading data. Network error.`);
-  // }
 }
 
 export { getData };

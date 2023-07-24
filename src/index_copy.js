@@ -33,7 +33,7 @@ buttonArrowUp.addEventListener('click', () => {
   scrollWinUp();
 });
 
-async function onSearch(event) {
+function onSearch(event) {
   event.preventDefault();
   currentPage = 1;
   searchRequest = event.target.firstElementChild.value.trim();
@@ -42,62 +42,64 @@ async function onSearch(event) {
     return messageError('No data to search. Enter data in the input field.');
   }
   scrollWinUp();
-  try {
-    const data = await getData(searchRequest, currentPage);
-
-    readingError = false;
-    message.innerHTML = '';
-    gallery.innerHTML = '';
-    gallery.insertAdjacentHTML(
-      'beforeend',
-      await createMarkup(data.hits, currentPage, totalHits)
-    );
-    arrSearchData = data.hits;
-    observer.observe(guard);
-    lightbox = new SimpleLightbox('.js-gallery a', {
-      captionsData: 'alt',
-      captionPosition: 'bottom',
-      captionDelay: 250,
+  return getData(searchRequest, currentPage)
+    .then(data => {
+      readingError = false;
+      message.innerHTML = '';
+      gallery.innerHTML = '';
+      gallery.insertAdjacentHTML(
+        'beforeend',
+        createMarkup(data.hits, currentPage, totalHits)
+      );
+      arrSearchData = data.hits;
+      observer.observe(guard);
+      lightbox = new SimpleLightbox('.js-gallery a', {
+        captionsData: 'alt',
+        captionPosition: 'bottom',
+        captionDelay: 250,
+      });
+      totalHits = data.totalHits;
+    })
+    .catch(error => {
+      // console.log(error);
+      readingError = true;
+      buttonArrowUp.hidden = true;
+      messageError(`${error.message}. Error reading data.`);
+    })
+    .finally(() => {
+      if (totalHits && !readingError) {
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      }
+      if (!totalHits) totalHits = 1;
     });
-    totalHits = data.totalHits;
-  } catch (error) {
-    // console.log(error.message);
-    readingError = true;
-    buttonArrowUp.hidden = true;
-    messageError(`${error}. Error reading data.`);
-  } finally {
-    if (totalHits && !readingError) {
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-    }
-    if (!totalHits) totalHits = 1;
-  }
 }
 
-async function onLoadMoreInfinityScroll() {
+function onLoadMoreInfinityScroll() {
   currentPage += 1;
   let photo = currentPage * PER_PAGE;
   if (photo <= totalHits || photo - totalHits <= PER_PAGE) {
-    try {
-      const data = await getData(searchRequest, currentPage);
-      gallery.insertAdjacentHTML(
-        'beforeend',
-        await createMarkup(data.hits, currentPage, totalHits)
-      );
+    getData(searchRequest, currentPage)
+      .then(data => {
+        gallery.insertAdjacentHTML(
+          'beforeend',
+          createMarkup(data.hits, currentPage, totalHits)
+        );
 
-      lightbox.refresh();
+        lightbox.refresh();
 
-      const { height: cardHeight } = document
-        .querySelector('.js-gallery')
-        .firstElementChild.getBoundingClientRect();
-      window.scrollBy({
-        top: cardHeight * 2.15,
-        behavior: 'smooth',
+        const { height: cardHeight } = document
+          .querySelector('.js-gallery')
+          .firstElementChild.getBoundingClientRect();
+        window.scrollBy({
+          top: cardHeight * 2.15,
+          behavior: 'smooth',
+        });
+      })
+      .catch(error => {
+        // console.log(error);
+        buttonArrowUp.hidden = true;
+        messageError(`${error.message}. Error reading data.`);
       });
-    } catch (error) {
-      // console.log(error.message);
-      buttonArrowUp.hidden = true;
-      messageError(`${error.message}. Error reading data.`);
-    }
   } else {
     if (arrSearchData.length !== 0)
       messageEndCollection(
@@ -115,9 +117,9 @@ const options = {
 const observer = new IntersectionObserver(handlerPaggination, options);
 
 function handlerPaggination(entries, observer) {
-  entries.forEach(async entry => {
+  entries.forEach(entry => {
     if (entry.isIntersecting) {
-      await onLoadMoreInfinityScroll();
+      onLoadMoreInfinityScroll();
     }
   });
 }

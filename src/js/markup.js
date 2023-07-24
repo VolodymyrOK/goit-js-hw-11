@@ -4,7 +4,7 @@ import refs from './refs';
 
 const { buttonArrowUp } = refs;
 
-function createMarkup(arrData, currentPage, totalHits) {
+async function createMarkup(arrData, currentPage, totalHits) {
   if (currentPage > Math.ceil(totalHits / PER_PAGE)) {
     buttonArrowUp.hidden = true;
     return messageEndCollection(
